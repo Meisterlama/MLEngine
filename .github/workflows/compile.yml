@@ -17,11 +17,12 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
+      - uses: seanmiddleditch/gha-setup-ninja@master
 
       - name: Configure the project
         run: |
-          cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}
+          cmake -S . -B build -G Ninja -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}
 
       - name: Build the project
         run: cmake --build build --config Release
