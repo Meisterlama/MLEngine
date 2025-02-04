@@ -1,0 +1,10 @@
+# Ignore build directories
+cmake-build-*
+
+# Ignore IDE-specific files (CLion, JetBrains specific)
+.idea/
+
+# Ignore custom configuration files
+*.env
+*.local
+*.config
