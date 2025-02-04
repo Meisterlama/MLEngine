@@ -24,7 +24,7 @@ jobs:
 
       - name: Configure the project
         run: |
-          cmake -S . -B build -G Ninja -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}
+          cmake -S . -B build -G Ninja
 
       - name: Build the project
         run: cmake --build build --config Release
