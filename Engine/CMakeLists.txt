@@ -1,13 +1,15 @@
-file(GLOB_RECURSE ENGINE_SRC CONFIGURE_DEPENDS src/*.cpp include/*.h)
+add_library(MLEngine_Engine INTERFACE)
+set_target_properties(MLEngine_Engine PROPERTIES ${MLEngine_TargetProperties})
+target_compile_options(MLEngine_Engine INTERFACE ${MLEngine_TargetCompileOptions})
 
 
-add_library(MLEngine_Engine STATIC
-       ${ENGINE_SRC}
-)
-target_include_directories(MLEngine_Engine PUBLIC include)
+add_subdirectory(Core)
+target_link_libraries(MLEngine_Engine INTERFACE MLEngine_Core)
 
-if (MSVC)
-    target_compile_options(MLEngine_Engine PRIVATE /W4)
-else ()
-    target_compile_options(MLEngine_Engine PRIVATE -Wall -Wextra -Wpedantic)
+if (MLEngine_Options_Rendering)
+    add_subdirectory(Rendering)
+    target_link_libraries(MLEngine_Engine INTERFACE MLEngine_Rendering)
 endif ()
+
+
+

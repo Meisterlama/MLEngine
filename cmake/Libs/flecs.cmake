@@ -1,0 +1,1 @@
+CPMAddPackage("gh:SanderMertens/flecs#v4.0.4")
