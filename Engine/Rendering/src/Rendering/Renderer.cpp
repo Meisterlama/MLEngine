@@ -3,13 +3,14 @@
 //
 #include "Rendering/Renderer.h"
 #include <glad/glad.h> // Ensure OpenGL functions are loaded
-#include <SDL3/SDL_log.h>
+
+#include "Logger/Module.h"
 
 namespace MLEngine
 {
     Renderer::Renderer() { ConfigureGlobalStates(); }
 
-    Renderer::~Renderer() { SDL_Log("Renderer destroyed"); }
+    Renderer::~Renderer() { MLLogTrace("Renderer destroyed"); }
 
     void Renderer::ClearScreen(float r, float g, float b, float a)
     {
@@ -39,6 +40,6 @@ namespace MLEngine
         glEnable(GL_DEPTH_TEST); // Enable depth testing
         glEnable(GL_CULL_FACE);  // Enable face culling
         glCullFace(GL_BACK);     // Cull back faces
-        SDL_Log("Global OpenGL states configured");
+        MLLogTrace("Global OpenGL states configured");
     }
 }

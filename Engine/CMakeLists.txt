@@ -1,15 +1,16 @@
-add_library(MLEngine_Engine INTERFACE)
-set_target_properties(MLEngine_Engine PROPERTIES ${MLEngine_TargetProperties})
-target_compile_options(MLEngine_Engine INTERFACE ${MLEngine_TargetCompileOptions})
+message(STATUS "Configuring MLEngine")
 
+MLCreateAndSelectEngineTarget()
+MLConfigureTarget(${MLEngine_BuiltTarget})
 
-add_subdirectory(Core)
-target_link_libraries(MLEngine_Engine INTERFACE MLEngine_Core)
+MLAddModule(CoreInterfaces)
+MLAddModule(Core)
+MLAddModule(Logger)
+MLAddModule(Inputs)
+MLAddModule(Resource)
 
 if (MLEngine_Options_Rendering)
-    add_subdirectory(Rendering)
-    target_link_libraries(MLEngine_Engine INTERFACE MLEngine_Rendering)
+    MLAddModule(Rendering)
 endif ()
 
-
-
+message(STATUS "MLEngine have been configured")

@@ -5,7 +5,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 
 include(MLEngineGlobals)
 include(MLEngineDeps)
+include(MLEngineUtils)
 
+option(MLEngine_Options_SharedLibrary "Build the engine as a shared library" ON)
 option(MLEngine_Options_Rendering "Build Rendering Module" ON)
 option(MLEngine_Options_Launcher "Use project defined main.cpp" ON)
 

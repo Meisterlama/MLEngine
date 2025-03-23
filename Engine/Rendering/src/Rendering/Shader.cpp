@@ -3,13 +3,13 @@
 //
 
 #include "Rendering/Shader.h"
+#include "Logger/Module.h"
 
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
-#include <SDL3/SDL_log.h>
 
 namespace MLEngine {
     Shader::Shader(const std::string &vertexPath, const std::string &fragmentPath) {
@@ -68,7 +68,7 @@ namespace MLEngine {
         glGetShaderiv(id, GL_COMPILE_STATUS, &success);
         if (!success) {
             glGetShaderInfoLog(id, 512, nullptr, infoLog);
-            SDL_Log("ERROR::SHADER::COMPILATION_FAILED\n%s", infoLog);
+            MLLogTrace("ERROR::SHADER::COMPILATION_FAILED\n{}", infoLog);
         }
 
         return id;
@@ -86,7 +86,7 @@ namespace MLEngine {
         glGetProgramiv(programID, GL_LINK_STATUS, &success);
         if (!success) {
             glGetProgramInfoLog(programID, 512, nullptr, infoLog);
-            SDL_Log("ERROR::SHADER::PROGRAM_LINKING_FAILED\n%s", infoLog);
+            MLLogTrace("ERROR::SHADER::PROGRAM_LINKING_FAILED\n{}", infoLog);
         }
     }
 
@@ -98,7 +98,7 @@ namespace MLEngine {
             buffer << file.rdbuf();
             file.close();
         } else {
-            SDL_Log("ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ: %s", filepath.c_str());
+            MLLogTrace("ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ: {}", filepath.c_str());
         }
 
         return buffer.str().c_str();

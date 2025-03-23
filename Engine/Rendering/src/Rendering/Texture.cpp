@@ -4,10 +4,11 @@
 
 #include "Rendering/Texture.h"
 
+#include "Logger/Module.h"
+
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 #include <glad/glad.h>
-#include <SDL3/SDL_log.h>
 
 namespace MLEngine {
     Texture::Texture(const std::string &filepath) { LoadTexture(filepath); }
@@ -49,8 +50,8 @@ namespace MLEngine {
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-            SDL_Log("Texture loaded: %s", filepath.c_str());
-        } else { SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Failed to load texture: %s", filepath.c_str()); }
+            MLLogTrace("Texture loaded: {}", filepath);
+        } else { MLLogError("Failed to load texture: {}", filepath); }
 
         stbi_image_free(data); // Free image data
         glBindTexture(GL_TEXTURE_2D, 0); // Unbind

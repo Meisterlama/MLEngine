@@ -7,7 +7,6 @@
 #include <imgui_impl_opengl3.h>
 #include <imgui_impl_sdl3.h>
 #include <SDL3/SDL_init.h>
-#include <SDL3/SDL_log.h>
 #include <SDL3/SDL_messagebox.h>
 
 #include "Core/Engine.h"
@@ -29,7 +28,7 @@ namespace MLEngine
 
         if (!window_handle)
         {
-            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Failed to create window: %s", SDL_GetError());
+            MLLogError("Failed to create window: {}", SDL_GetError());
         }
 
         SDL_SetWindowPosition(window_handle, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);

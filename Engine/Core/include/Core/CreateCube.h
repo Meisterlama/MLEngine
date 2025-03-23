@@ -6,9 +6,10 @@
 #include <tiny_obj_loader.h>
 
 #include "Rendering/Mesh.h"
+#include "Logger/Module.h"
 
 namespace MLEngine {
-    bool LoadOBJFile(const std::string &filePath, Mesh *&mesh) {
+    inline bool LoadOBJFile(const std::string &filePath, Mesh *&mesh) {
         // TinyObjLoader required objects
         tinyobj::attrib_t attrib;
         std::vector<tinyobj::shape_t> shapes;
@@ -17,10 +18,10 @@ namespace MLEngine {
 
         // Load the OBJ file using tinyobjloader
         bool success = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, filePath.c_str());
-        if (!warn.empty()) { SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "Warning: %s", warn.c_str()); }
-        if (!err.empty()) { SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Error: %s", err.c_str()); }
+        if (!warn.empty()) { MLLogWarn("Warning: {}", warn); }
+        if (!err.empty()) { MLLogError("Error: {}", err); }
         if (!success) {
-            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Failed to load OBJ file: %s", filePath.c_str());
+            MLLogError("Failed to load OBJ file: {}", filePath);
             return false;
         }
 

@@ -2,9 +2,9 @@
 // Created by Lama on 03/02/2025.
 //
 #include "Rendering/Framebuffer.h"
+#include "Logger/Module.h"
 #include <glad/glad.h>
 #include <iostream>
-#include <SDL3/SDL_log.h>
 
 namespace MLEngine {
     Framebuffer::Framebuffer(unsigned int width, unsigned int height) { Initialize(width, height); }
@@ -46,7 +46,7 @@ namespace MLEngine {
 
         // Check if framebuffer is complete
         if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-            SDL_Log("ERROR::FRAMEBUFFER:: Framebuffer is not complete!");
+            MLLogTrace("ERROR::FRAMEBUFFER:: Framebuffer is not complete!");
         }
 
         // Unbind framebuffer
