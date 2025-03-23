@@ -5,7 +5,7 @@
 #include "CoreInterfaces/ModuleInterface.h"
 
 namespace MLEngine {
-    class PlatformModule : ModuleInterface {
+    class PlatformModule : public ModuleInterface {
         public:
             PlatformModule() : ModuleInterface(){};
             ~PlatformModule() override = default;

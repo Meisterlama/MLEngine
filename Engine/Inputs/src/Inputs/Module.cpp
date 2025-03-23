@@ -14,6 +14,8 @@ namespace MLEngine
 
     void InputModule::ProcessEvent(const PlatformEvent* event)
     {
+        ModuleInterface::ProcessEvent(event);
+
         SDL_Event* sdl_event = static_cast<SDL_Event*>(event->Event);
         for (const auto& callback : subscribers[sdl_event->type]) { callback(event); }
         switch (sdl_event->type)

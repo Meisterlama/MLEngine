@@ -58,10 +58,9 @@ namespace MLEngine
     {
         s_engine = this;
 
-        ModuleLocator<PlatformModule>::Register();
-        ModuleLocator<PlatformModule>::Get()->Init();
+        ModuleLocator<PlatformModule>::RegisterInit();
+        ModuleLocator<InputModule>::RegisterInit();
 
-        ModuleLocator<InputModule>::Register();
         Handle<LoggerModule> loggerModule = ModuleLocator<LoggerModule>::Register();
         loggerModule->AddCallback(StdOutLogCallback);
         loggerModule->AddFile("log.txt");

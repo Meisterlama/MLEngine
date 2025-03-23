@@ -12,7 +12,7 @@
 
 namespace MLEngine
 {
-    class InputModule : ModuleInterface
+    class InputModule : public ModuleInterface
     {
     public:
         InputModule() : ModuleInterface()

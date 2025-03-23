@@ -19,8 +19,14 @@ namespace MLEngine
     public:
         static constexpr Handle<T> Register()
         {
-            //TODO: Prevent/warn if multiple registration
+            assert(!instance); // "Module already registered"
             instance = MakeHandle<T>();
+            return instance;
+        }
+
+        static constexpr Handle<T> RegisterInit()
+        {
+            ModuleLocator::Register()->Init();
             return instance;
         }
 

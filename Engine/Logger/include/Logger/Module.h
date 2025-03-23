@@ -10,7 +10,7 @@
 
 namespace MLEngine
 {
-    class LoggerModule : ModuleInterface
+    class LoggerModule : public ModuleInterface
     {
     public:
         LoggerModule() : ModuleInterface(){};

@@ -11,6 +11,7 @@ namespace MLEngine
 {
     void PlatformModule::Init()
     {
+        ModuleInterface::Init();
         SDL_SetAppMetadata("MLEngine", "0.0.1", "com.meisterlama.mlengine");
         if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMEPAD | SDL_INIT_AUDIO))
         {
@@ -20,9 +21,11 @@ namespace MLEngine
 
     void PlatformModule::Update()
     {
+        ModuleInterface::Update();
     }
 
     void PlatformModule::Shutdown()
     {
+        ModuleInterface::Shutdown();
     }
 }

@@ -16,6 +16,7 @@ namespace MLEngine
 
         virtual void Init()
         {
+            bInitialized = true;
         };
 
         virtual void Update()
@@ -28,6 +29,7 @@ namespace MLEngine
 
         virtual void Shutdown()
         {
+            bInitialized = false;
         };
 
         bool IsInitialized() const { return bInitialized; }
