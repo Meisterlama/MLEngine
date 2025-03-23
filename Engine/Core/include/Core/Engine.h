@@ -6,19 +6,15 @@
 #include <memory>
 #include <string>
 #include <utility>
-#include <vector>
-#include <CoreInterfaces/Types.h>
-#include <SDL3/SDL_events.h>
-#include "Core/CreateCube.h"
 
 #include "Console.h"
-
-#ifdef ML_RENDERING
-    #define ML_GLSL_VERSION "#version 130"
-#endif
+#include "CoreInterfaces/Types.h"
+#include "Platform/PlatformEvent.h"
 
 namespace MLEngine
 {
+    class GraphicsContext;
+    class Window;
     class Renderer;
 }
 
@@ -27,23 +23,17 @@ namespace MLEngine
     class ApplicationInterface;
 }
 
-namespace MLEngine {
+namespace MLEngine
+{
     class Engine;
-    class ResourceManager;
-    class GraphicsContext;
-    class Window;
-    class Logger;
-    class Mesh;
-    class Shader;
-    class Camera;
+    extern Engine* s_engine;
 
-    extern Engine *gEngine;
-
-    class Engine {
+    class Engine
+    {
     public:
-        Engine();
+        Engine() = default;
 
-        ~Engine();
+        ~Engine() = default;
 
         void RegisterInputEventCallbacks();
 
@@ -51,13 +41,14 @@ namespace MLEngine {
 
         void Update();
 
-        void ProcessEvent(SDL_Event *event);
+        void ProcessEvent(const PlatformEvent* event);
 
         void Shutdown();
 
         bool ShouldQuit();
 
-        inline void RequestShutdown(std::string reason = "Unknown") {
+        void RequestShutdown(std::string reason = "Unknown")
+        {
             ShutdownReason = std::move(reason);
             bShutdownRequested = true;
         };
@@ -65,7 +56,6 @@ namespace MLEngine {
         bool isPlaying = false;
 
     public:
-        Handle<Logger> default_logger = nullptr;
         Handle<Window> default_window = nullptr;
         Handle<GraphicsContext> default_gcontext = nullptr;
         Console console;

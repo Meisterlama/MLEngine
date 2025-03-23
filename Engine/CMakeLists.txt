@@ -8,9 +8,10 @@ MLAddModule(Core)
 MLAddModule(Logger)
 MLAddModule(Inputs)
 MLAddModule(Resource)
+MLAddModule(Platform)
 
-if (MLEngine_Options_Rendering)
+if(MLEngine_Options_Rendering)
     MLAddModule(Rendering)
-endif ()
+endif()
 
 message(STATUS "MLEngine have been configured")

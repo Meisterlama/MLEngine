@@ -4,57 +4,63 @@
 #include "Core/Engine.h"
 
 #include <imgui.h>
-#include <glm/gtc/matrix_transform.hpp>
-#include <SDL3/SDL.h>
-
-#include "Core/ImGuiIntegration.h"
-#include "Core/Window.h"
-#include "Core/CreateCube.h"
-#include "Inputs/InputModule.h"
-#include "Logger/Module.h"
 
 #define TINYOBJLOADER_IMPLEMENTATION
 #include <tiny_obj_loader.h>
-#include <Logger/Preprocessor.h>
-#include <Logger/Logger.h>
 
+#include "Core/ImGUIIntegration.h"
+#include "Core/Time.h"
 #include "CoreInterfaces/ApplicationInterface.h"
 #include "CoreInterfaces/ModuleLocator.h"
-#include "Core/Time.h"
+#include "Inputs/Module.h"
+#include "Logger/Module.h"
+#include "Platform/Module.h"
+#include "Platform/Window.h"
 
-namespace MLEngine {
-    Engine *gEngine = nullptr;
 
-    Engine::Engine() {
-    }
+namespace MLEngine
+{
+    Engine* s_engine = nullptr;
 
-    Engine::~Engine() {
-    }
-
-    void Engine::RegisterInputEventCallbacks() {
+    void Engine::RegisterInputEventCallbacks()
+    {
         InputModule& inputModule = *ModuleLocator<InputModule>::Get();
 
-        inputModule.SubscribeToEvent(SDL_EVENT_QUIT, [this](const SDL_Event *Event) {
+        inputModule.SubscribeToEvent(SDL_EVENT_QUIT, [this](const PlatformEvent* event)
+        {
             RequestShutdown("SDL_EVENT_QUIT");
         });
-        inputModule.SubscribeToEvent(SDL_EVENT_KEY_DOWN, [this](const SDL_Event *Event) {
-            if (Event->key.key == SDLK_ESCAPE) {
+        inputModule.SubscribeToEvent(SDL_EVENT_KEY_DOWN, [this](const PlatformEvent* event)
+        {
+            SDL_Event* sdl_event = static_cast<SDL_Event*>(event->Event);
+            if (sdl_event->key.key == SDLK_ESCAPE)
+            {
                 RequestShutdown("SDL_EVENT_KEY_DOWN");
             }
         });
 
 
-        inputModule.SubscribeToEvent(SDL_EVENT_KEY_DOWN, [](const SDL_Event *Event) {
-            if (Event->key.scancode == SDL_SCANCODE_GRAVE) {
-                gEngine->console.ToggleConsole();
+        inputModule.SubscribeToEvent(SDL_EVENT_KEY_DOWN, [](const PlatformEvent* event)
+        {
+            SDL_Event* sdl_event = static_cast<SDL_Event*>(event->Event);
+            if (sdl_event->key.scancode == SDL_SCANCODE_GRAVE)
+            {
+                s_engine->console.ToggleConsole();
             }
         });
     }
 
-    class Test{};
+    class Test
+    {
+    };
 
-    void Engine::Init(ApplicationInterface* application) {
-        gEngine = this;
+    void Engine::Init(ApplicationInterface* application)
+    {
+        s_engine = this;
+
+        ModuleLocator<PlatformModule>::Register();
+        ModuleLocator<PlatformModule>::Get()->Init();
+
         ModuleLocator<InputModule>::Register();
         Handle<LoggerModule> loggerModule = ModuleLocator<LoggerModule>::Register();
         loggerModule->AddCallback(StdOutLogCallback);
@@ -69,14 +75,11 @@ namespace MLEngine {
         {
             console.Log(GetDefaultFormattedLogMessage(event));
         });
-        SDL_SetAppMetadata("MLEngine", "0.0.1", "com.meisterlama.mlengine");
-        if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMEPAD | SDL_INIT_AUDIO)) {
-            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_Init failed: %s", SDL_GetError());
-        }
 
-        default_window = MakeHandle<Window>("MLEngine");
-        default_window->Open();
-        default_gcontext = MakeHandle<GraphicsContext>(default_window->GetWindowHandle());
+
+        default_window = MakeHandle<Window>();
+        default_window->Open("MLEngine");
+        default_gcontext = MakeHandle<GraphicsContext>(default_window);
 
         MLInitImGui(default_gcontext.get(), default_window.get());
 
@@ -84,10 +87,11 @@ namespace MLEngine {
         current_application->Init();
     }
 
-    void Engine::Update() {
+    void Engine::Update()
+    {
         if (!freeze_time) { UpdateTime(); }
 
-        Renderer *renderer = default_gcontext->GetRenderer();
+        Renderer* renderer = default_gcontext->GetRenderer();
         renderer->ClearScreen(0.1, 0.1, 0.1, 1.0);
 
         MLNewImGuiFrame();
@@ -97,23 +101,25 @@ namespace MLEngine {
         MLRenderImGui();
         default_gcontext->SwapBuffers();
         ModuleLocator<InputModule>::Get()->ResetRelativeMouseMotion();
-
     }
 
-    void Engine::ProcessEvent(SDL_Event *event) {
+    void Engine::ProcessEvent(const PlatformEvent* event)
+    {
         ModuleLocator<InputModule>::Get()->ProcessEvent(event);
         MLProcessInputImGui(event);
         default_window->ProcessEvent(event);
         current_application->ProcessEvent(event);
     }
 
-    void Engine::Shutdown() {
+    void Engine::Shutdown()
+    {
         MLLogTrace("Shutting down Engine with reason : {}", ShutdownReason);
         current_application->Shutdown();
         MLShutdownImGui();
     }
 
-    bool Engine::ShouldQuit() {
+    bool Engine::ShouldQuit()
+    {
         if (bShutdownRequested) return true;
         if (default_window == nullptr) return true;
         return false;

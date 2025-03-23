@@ -15,9 +15,11 @@ namespace MLEngine
     class InputModule : ModuleInterface
     {
     public:
-        InputModule() : ModuleInterface(){};
+        InputModule() : ModuleInterface()
+        {
+        };
         ~InputModule() override = default;
-        using EventCallback = std::function<void(const SDL_Event*)>;
+        using EventCallback = std::function<void(const PlatformEvent*)>;
 
         bool IsKeyPressed(SDL_Scancode key) { return keyboardState[key]; }
 
@@ -61,9 +63,6 @@ namespace MLEngine
         std::unordered_map<Uint32, std::vector<EventCallback>> subscribers{};
 
     public:
-        void Init() override;
-        void Update() override;
-        void ProcessEvent(SDL_Event* event) override;
-        void Shutdown() override;
+        void ProcessEvent(const PlatformEvent* event) override;
     };
 }

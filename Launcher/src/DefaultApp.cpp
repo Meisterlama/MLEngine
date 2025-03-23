@@ -1,16 +1,16 @@
 #include "DefaultApp.h"
 
-#include <CoreInterfaces/ModuleLocator.h>
+#include <glm/detail/type_quat.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 #include "Core/CreateCube.h"
-#include "Core/EntryPoint.h"
-#include "Core/ImGuiIntegration.h"
+#include "Core/Engine.h"
+#include "Core/ImGUIIntegration.h"
 #include "Core/Time.h"
-#include "glm/vec3.hpp"
+#include "CoreInterfaces/ModuleLocator.h"
+#include "Inputs/Module.h"
+#include "Platform/EntryPoint.h"
 #include "Rendering/Camera.h"
-#include "glm/detail/type_quat.hpp"
-#include "glm/gtc/quaternion.hpp"
-#include "Inputs/InputModule.h"
 #include "Rendering/Context.h"
 #include "Rendering/Shader.h"
 
@@ -21,10 +21,6 @@ MLEngine::ApplicationInterface* MLEngine::CreateApplication()
 
 static unsigned int VAO, VBO;
 static bool show_demo_window = false;
-
-DefaultApp::DefaultApp()
-{
-}
 
 void DefaultApp::HandleCameraInputs(float delta_time)
 {
@@ -67,24 +63,27 @@ void DefaultApp::HandleCameraInputs(float delta_time)
 void DefaultApp::Init()
 {
     MLEngine::InputModule& inputModule = *MLEngine::ModuleLocator<MLEngine::InputModule>::Get();
-    inputModule.SubscribeToEvent(SDL_EVENT_MOUSE_BUTTON_DOWN, [this, &inputModule](const SDL_Event* Event)
+    inputModule.SubscribeToEvent(SDL_EVENT_MOUSE_BUTTON_DOWN, [this, &inputModule](const MLEngine::PlatformEvent* event)
     {
-        if (Event->button.button == SDL_BUTTON_RIGHT)
+        SDL_Event* sdl_event = static_cast<SDL_Event*>(event->Event);
+        if (sdl_event->button.button == SDL_BUTTON_RIGHT)
         {
             inputModule.SetCaptureMouse(true);
         }
     });
-    inputModule.SubscribeToEvent(SDL_EVENT_MOUSE_BUTTON_UP, [this, &inputModule](const SDL_Event* Event)
+    inputModule.SubscribeToEvent(SDL_EVENT_MOUSE_BUTTON_UP, [this, &inputModule](const MLEngine::PlatformEvent* event)
     {
-        if (Event->button.button == SDL_BUTTON_RIGHT)
+        SDL_Event* sdl_event = static_cast<SDL_Event*>(event->Event);
+        if (sdl_event->button.button == SDL_BUTTON_RIGHT)
         {
             inputModule.SetCaptureMouse(false);
         }
     });
 
-    inputModule.SubscribeToEvent(SDL_EVENT_KEY_DOWN, [](const SDL_Event* Event)
+    inputModule.SubscribeToEvent(SDL_EVENT_KEY_DOWN, [](const MLEngine::PlatformEvent* event)
     {
-        if (Event->key.key == SDLK_F1)
+        SDL_Event* sdl_event = static_cast<SDL_Event*>(event->Event);
+        if (sdl_event->key.key == SDLK_F1)
         {
             show_demo_window = !show_demo_window;
         }
@@ -119,7 +118,7 @@ void DefaultApp::Update()
     default_shader->SetUniform("lightColor", glm::vec3(1.0f, 0.0f, 1.0f));
     default_shader->SetUniform("objectColor", glm::vec3(1.0f, 1.0f, 1.0f));
 
-    auto renderer = MLEngine::gEngine->default_gcontext->GetRenderer();
+    auto renderer = MLEngine::s_engine->default_gcontext->GetRenderer();
 
     renderer->DrawMesh(cube_mesh, default_shader.get(), &camera);
     translate = glm::translate(glm::mat4(1.0f), lightPos);
@@ -137,7 +136,7 @@ void DefaultApp::Update()
     ImGui::End();
 }
 
-void DefaultApp::ProcessEvent(SDL_Event* event)
+void DefaultApp::ProcessEvent(const MLEngine::PlatformEvent* event)
 {
 }
 

@@ -10,9 +10,11 @@
 #include "Logger/Module.h"
 
 
-bool MLEngine::ResourceManager::RegisterResourceType(const std::string &typeName,
-                                                     Handle<IResourceLoader> loader) {
-    if (loaderRegistry.find(typeName) == loaderRegistry.end()) {
+bool MLEngine::ResourceManager::RegisterResourceType(const std::string& typeName,
+                                                     const Handle<IResourceLoader>& loader)
+{
+    if (!loaderRegistry.contains(typeName))
+    {
         loaderRegistry.emplace(typeName, loader);
         return true;
     }
@@ -20,7 +22,7 @@ bool MLEngine::ResourceManager::RegisterResourceType(const std::string &typeName
 }
 
 void MLEngine::ResourceManager::LoadResourceFromFile(const std::string& path, const std::string& name,
-    std::string type)
+                                                     std::string type)
 {
     if (type.empty())
     {
@@ -41,28 +43,34 @@ void MLEngine::ResourceManager::LoadResourceFromFile(const std::string& path, co
     }
 }
 
-MLEngine::ResourceManager::ResourceManager() {
+MLEngine::ResourceManager::ResourceManager()
+{
     asyncIOQueue = SDL_CreateAsyncIOQueue();
 }
 
-MLEngine::ResourceManager::~ResourceManager() {
+MLEngine::ResourceManager::~ResourceManager()
+{
     SDL_DestroyAsyncIOQueue(asyncIOQueue);
     asyncIOQueue = nullptr;
 }
 
-void MLEngine::ResourceManager::FlushLoading() {
+void MLEngine::ResourceManager::FlushLoading()
+{
 }
 
-void MLEngine::ResourceManager::RemoveUnusedResources() {
+void MLEngine::ResourceManager::RemoveUnusedResources()
+{
 }
 
 std::string MLEngine::ResourceManager::DeduceResourceTypeFromPath(const std::string& path)
 {
     std::filesystem::path p(path.c_str());
 
-    for (auto loader : loaderRegistry)
+    for (const auto loader : loaderRegistry)
     {
-        if (loader.second->SupportsExtension(p.extension().string()));
+        if (loader.second->SupportsExtension(p.extension().string()))
+        {
+        }
     }
     return "";
 }

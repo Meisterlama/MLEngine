@@ -5,11 +5,13 @@
 #pragma once
 #include <tiny_obj_loader.h>
 
-#include "Rendering/Mesh.h"
 #include "Logger/Module.h"
+#include "Rendering/Mesh.h"
 
-namespace MLEngine {
-    inline bool LoadOBJFile(const std::string &filePath, Mesh *&mesh) {
+namespace MLEngine
+{
+    inline bool LoadOBJFile(const std::string& filePath, Mesh*& mesh)
+    {
         // TinyObjLoader required objects
         tinyobj::attrib_t attrib;
         std::vector<tinyobj::shape_t> shapes;
@@ -20,7 +22,8 @@ namespace MLEngine {
         bool success = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, filePath.c_str());
         if (!warn.empty()) { MLLogWarn("Warning: {}", warn); }
         if (!err.empty()) { MLLogError("Error: {}", err); }
-        if (!success) {
+        if (!success)
+        {
             MLLogError("Failed to load OBJ file: {}", filePath);
             return false;
         }
@@ -29,16 +32,19 @@ namespace MLEngine {
         std::vector<unsigned int> indices;
 
         // Iterate over shapes (in .obj, each shape corresponds to a "mesh")
-        for (const auto &shape: shapes) {
+        for (const auto& shape : shapes)
+        {
             size_t index_offset = 0;
 
             // Loop through all faces (polygons) in the shape
-            for (size_t f = 0; f < shape.mesh.num_face_vertices.size(); f++) {
+            for (size_t f = 0; f < shape.mesh.num_face_vertices.size(); f++)
+            {
                 unsigned int fv = shape.mesh.num_face_vertices[f];
                 // Number of vertices in the face (usually 3 for triangles)
 
                 // Process each vertex of the face
-                for (size_t v = 0; v < fv; v++) {
+                for (size_t v = 0; v < fv; v++)
+                {
                     // Access the correct index in the face
                     tinyobj::index_t idx = shape.mesh.indices[index_offset + v];
 
@@ -52,21 +58,27 @@ namespace MLEngine {
                         attrib.vertices[3 * idx.vertex_index + 2]);
 
                     // NORMAL
-                    if (idx.normal_index >= 0) {
+                    if (idx.normal_index >= 0)
+                    {
                         vertex.normal = glm::vec3(
                             attrib.normals[3 * idx.normal_index + 0],
                             attrib.normals[3 * idx.normal_index + 1],
                             attrib.normals[3 * idx.normal_index + 2]);
-                    } else {
+                    }
+                    else
+                    {
                         vertex.normal = glm::vec3(0.0f, 0.0f, 0.0f); // Default normal if none is provided
                     }
 
                     // TEXTURE COORDINATES
-                    if (idx.texcoord_index >= 0) {
+                    if (idx.texcoord_index >= 0)
+                    {
                         vertex.texCoords = glm::vec2(
                             attrib.texcoords[2 * idx.texcoord_index + 0],
                             attrib.texcoords[2 * idx.texcoord_index + 1]);
-                    } else {
+                    }
+                    else
+                    {
                         vertex.texCoords = glm::vec2(0.0f, 0.0f); // Default UV if none is provided
                     }
 

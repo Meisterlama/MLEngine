@@ -5,7 +5,7 @@
 
 #include <imgui.h>
 
-#include "Core/ImGuiIntegration.h"
+#include "Core/ImGUIIntegration.h"
 
 namespace MLEngine {
     Console::Console() {
@@ -15,7 +15,7 @@ namespace MLEngine {
         RegisterCommand("help", "Display all commands with their description", [&]() {
             Log("Available commands:");
             for (const auto &command: commands) {
-                Log("- " + command.first + ": " + commands_description[command.first]);
+                Log("- " + command.first + ": " + commandsDescription[command.first]);
             }
         });
     }
@@ -32,7 +32,7 @@ namespace MLEngine {
     void Console::RegisterCommand(const std::string &name, const std::string &description,
                                   std::function<void()> commandFunc) {
         commands[name] = move(commandFunc);
-        commands_description[name] = description;
+        commandsDescription[name] = description;
     }
 
     void Console::RenderConsole() {

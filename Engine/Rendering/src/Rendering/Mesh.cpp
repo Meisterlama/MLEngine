@@ -4,8 +4,10 @@
 
 
 #include "Rendering/Mesh.h"
-#include "Rendering/Shader.h"
+
 #include <glad/glad.h>
+
+#include "Rendering/Shader.h"
 
 namespace MLEngine {
     Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<unsigned int> &indices)

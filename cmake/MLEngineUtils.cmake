@@ -28,10 +28,14 @@ function(MLDetectSources _Target)
     string(REPLACE "MLEngine_" "" _Module ${_Target})
 
     file(GLOB_RECURSE MODULE_SRC CONFIGURE_DEPENDS
-            "${CMAKE_CURRENT_SOURCE_DIR}/src/${_Module}/*.cpp"
-            "${CMAKE_CURRENT_SOURCE_DIR}/include/${_Module}/*.h"
+            "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
+            "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h"
     )
-    target_include_directories("${_Target}" PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include/")
+    target_include_directories("${_Target}"
+            PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include/"
+            PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src/"
+    )
     target_sources("${_Target}" PRIVATE ${MODULE_SRC})
+
     MLConfigureTarget("${_Target}")
 endfunction()

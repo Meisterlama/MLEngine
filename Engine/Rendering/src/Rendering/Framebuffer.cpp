@@ -2,9 +2,11 @@
 // Created by Lama on 03/02/2025.
 //
 #include "Rendering/Framebuffer.h"
-#include "Logger/Module.h"
-#include <glad/glad.h>
+
 #include <iostream>
+#include <glad/glad.h>
+
+#include "Logger/Module.h"
 
 namespace MLEngine {
     Framebuffer::Framebuffer(unsigned int width, unsigned int height) { Initialize(width, height); }

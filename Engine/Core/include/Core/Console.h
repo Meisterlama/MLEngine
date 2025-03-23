@@ -7,21 +7,23 @@
 #include <unordered_map>
 #include <vector>
 
-namespace MLEngine {
-    class Console {
+namespace MLEngine
+{
+    class Console
+    {
     public:
         Console();
 
         ~Console() = default;
 
-        bool ExecuteCommand(const std::string &command);
+        bool ExecuteCommand(const std::string& command);
 
-        void RegisterCommand(const std::string &name, const std::string &description,
+        void RegisterCommand(const std::string& name, const std::string& description,
                              std::function<void()> commandFunc);
 
         void RenderConsole();
 
-        void Log(const std::string &message);
+        void Log(const std::string& message);
 
         void ToggleConsole(bool isOpened);
 
@@ -32,7 +34,7 @@ namespace MLEngine {
 
         std::vector<std::string> outputHistory{};
         std::string inputField{};
-        std::unordered_map<std::string, std::function<void()> > commands{};
-        std::unordered_map<std::string, std::string> commands_description{};
+        std::unordered_map<std::string, std::function<void()>> commands{};
+        std::unordered_map<std::string, std::string> commandsDescription{};
     };
 }

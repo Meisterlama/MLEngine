@@ -73,9 +73,9 @@ namespace MLEngine
         }
     }
 
-    GraphicsContext::GraphicsContext(void* window)
+    GraphicsContext::GraphicsContext(const Handle<Window>& window)
     {
-        window_handle = (SDL_Window*)window;
+        window_handle = static_cast<SDL_Window*>(window->GetWindowHandle().Window);
 
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
@@ -97,7 +97,7 @@ namespace MLEngine
         {
             glEnable(GL_DEBUG_OUTPUT);
             glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-            glDebugMessageCallback((GLDEBUGPROC) debugGLCallback, nullptr);
+            glDebugMessageCallback(static_cast<GLDEBUGPROC>(debugGLCallback), nullptr);
             glDebugMessageControl(GL_DONT_CARE, GL_DEBUG_TYPE_PERFORMANCE, GL_DONT_CARE, 0, nullptr, GL_FALSE);
             glDebugMessageControl(GL_DONT_CARE, GL_DEBUG_TYPE_OTHER, GL_DONT_CARE, 0, nullptr, GL_FALSE);
         }
@@ -110,7 +110,7 @@ namespace MLEngine
 
     GraphicsContext::~GraphicsContext()
     {
-        if (renderer != nullptr) { delete renderer; }
+        delete renderer;
         if (gl_context) { SDL_GL_DestroyContext(gl_context); }
     }
 

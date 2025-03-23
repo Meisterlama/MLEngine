@@ -3,8 +3,8 @@
 //
 #pragma once
 #include <memory>
+
 #include "CoreInterfaces/ApplicationInterface.h"
-#include "Core/Engine.h"
 #include "Rendering/Camera.h"
 
 namespace MLEngine
@@ -18,13 +18,13 @@ namespace MLEngine
 class DefaultApp : public MLEngine::ApplicationInterface
 {
 public:
-    DefaultApp();
+    DefaultApp() = default;
 
     void HandleCameraInputs(float delta_time);
     void Init() override;
     void Update() override;
     void Shutdown() override;
-    void ProcessEvent(SDL_Event* event) override;
+    void ProcessEvent(const MLEngine::PlatformEvent* event) override;
 
 private:
     std::shared_ptr<MLEngine::Shader> default_shader = nullptr;

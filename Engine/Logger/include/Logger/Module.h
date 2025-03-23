@@ -20,12 +20,12 @@ namespace MLEngine
 
         void SetQuiet(const bool enable) { quiet = enable; }
 
-        void AddCallback(LogFn callback);
-        void AddFile(std::string FilePath);
+        void AddCallback(const LogFn& callback);
+        void AddFile(const std::string& FilePath);
 
         void RemoveCallback(LogFn callback);;
 
-        void ManualLog(const LogLevel level, const std::string&& message, const std::string&& file_name, const Int32&& line) const;
+        void ManualLog(const LogLevel&& level, const std::string&& message, const std::string&& file_name, const Int32&& line) const;
     private:
 
         std::vector<LogFn> logCallbacks{};

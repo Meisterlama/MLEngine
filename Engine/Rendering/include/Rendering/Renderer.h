@@ -3,9 +3,9 @@
 //
 #pragma once
 
-#include "Shader.h"
 #include "Camera.h"
 #include "Mesh.h"
+#include "Shader.h"
 
 namespace MLEngine {
     class Renderer {
@@ -16,7 +16,7 @@ namespace MLEngine {
 
         void ClearScreen(float r, float g, float b, float a = 1.0f);
 
-        void DrawMesh(Mesh *mesh, Shader *shader, Camera *camera);
+        void DrawMesh(const Mesh *mesh, const Shader *shader, const Camera *camera);
 
     private:
         void ConfigureGlobalStates();

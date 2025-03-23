@@ -5,20 +5,20 @@
 #include "Logger/Module.h"
 
 #include <algorithm>
+#include <fstream>
+#include <iostream>
+#include <SDL3/SDL.h>
 
 #include "Logger/Logger.h"
-#include <SDL3/SDL.h>
-#include <iostream>
-#include <fstream>
 
 namespace MLEngine
 {
-    void LoggerModule::AddCallback(LogFn callback)
+    void LoggerModule::AddCallback(const LogFn& callback)
     {
         logCallbacks.push_back(callback);
     }
 
-    void LoggerModule::AddFile(std::string FilePath)
+    void LoggerModule::AddFile(const std::string& FilePath)
     {
         Handle<std::ofstream> FileHandle = MakeHandle<std::ofstream>(
             FilePath, std::ios::app | std::ios::ate);
@@ -38,7 +38,7 @@ namespace MLEngine
 
     void LoggerModule::RemoveCallback(LogFn callback)
     {
-        auto it = std::find_if(logCallbacks.begin(), logCallbacks.end(), [&callback](const LogFn& cb)
+        auto it = std::ranges::find_if(logCallbacks, [&callback](const LogFn& cb)
         {
             return cb.target_type() == callback.target_type();
         });
@@ -50,7 +50,8 @@ namespace MLEngine
     }
 
 
-    void LoggerModule::ManualLog(const LogLevel level, const std::string&& message, const std::string&& file_name, const int&& line) const
+    void LoggerModule::ManualLog(const LogLevel&& level, const std::string&& message, const std::string&& file_name,
+                                 const int&& line) const
     {
         LogEvent event;
         event.level = level;
@@ -58,7 +59,7 @@ namespace MLEngine
         event.FileLocation = fmt::format("[FILE:{}:{}]", file_name, line);
         event.time = SDL_GetTicks();
 
-        for (const auto & logCallback : logCallbacks)
+        for (const auto& logCallback : logCallbacks)
         {
             logCallback(&event);
         }

@@ -3,35 +3,38 @@
 //
 #pragma once
 
-#include <set>
 #include <memory>
+#include <set>
 #include <string>
 #include <unordered_map>
 #include <vector>
-#include <CoreInterfaces/Types.h>
 #include <SDL3/SDL_asyncio.h>
 #include <SDL3/SDL_thread.h>
+
+#include "CoreInterfaces/Types.h"
 
 namespace MLEngine
 {
     class IResource
     {
         friend class IResourceLoader;
-        public:
-        virtual ~IResource() = default;
 
+    public:
+        virtual ~IResource() = default;
     };
 
     class IResourceLoader
     {
         friend class ResourceManager;
+
     public:
         virtual ~IResourceLoader() = default;
 
     protected:
         bool supportAsyncLoading = false;
 
-        virtual Handle<IResource> LoadResource(const std::string& path, const std::string& name) {
+        virtual Handle<IResource> LoadResource(const std::string& path, const std::string& name)
+        {
             return nullptr;
         };
 
@@ -62,7 +65,7 @@ namespace MLEngine
 
         ~ResourceManager();
 
-        bool RegisterResourceType(const std::string& typeName, Handle<IResourceLoader> loader);
+        bool RegisterResourceType(const std::string& typeName, const Handle<IResourceLoader>& loader);
 
         void LoadResourceFromFile(const std::string& path, const std::string& name = "",
                                   std::string type = "");
@@ -75,8 +78,8 @@ namespace MLEngine
         std::string DeduceResourceTypeFromPath(const std::string& path);
 
 
-        std::unordered_map<std::string, Handle<IResourceLoader> > loaderRegistry;
-        std::unordered_map<std::string, Handle<IResource> > assetRegistry;
+        std::unordered_map<std::string, Handle<IResourceLoader>> loaderRegistry;
+        std::unordered_map<std::string, Handle<IResource>> assetRegistry;
 
         std::set<std::string> resourceToLoad;
 

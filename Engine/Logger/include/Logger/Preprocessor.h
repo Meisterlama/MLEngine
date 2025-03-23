@@ -3,7 +3,8 @@
 //
 #pragma once
 
-#include "fmt/core.h"
+#include <fmt/core.h>
+
 #include "CoreInterfaces/ModuleLocator.h"
 
 #define ML_STRINGIFY(x) #x

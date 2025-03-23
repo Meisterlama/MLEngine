@@ -3,24 +3,28 @@
 //
 #pragma once
 
-#include "Renderer.h"
 #include <SDL3/SDL_video.h>
 
-namespace MLEngine {
-    class GraphicsContext {
-        public:
-        GraphicsContext(void* window_handle);
+#include "Renderer.h"
+#include "Platform/Window.h"
+
+namespace MLEngine
+{
+    class GraphicsContext
+    {
+    public:
+        GraphicsContext(const Handle<Window>& window);
 
         ~GraphicsContext();
 
         void SwapBuffers();
 
-        void *GetContextHandle() { return gl_context; };
-        Renderer *GetRenderer() { return renderer; };
+        void* GetContextHandle() { return gl_context; };
+        Renderer* GetRenderer() { return renderer; };
 
     private:
-        SDL_Window *window_handle = nullptr;
+        SDL_Window* window_handle = nullptr;
         SDL_GLContext gl_context;
-        Renderer *renderer = nullptr;
+        Renderer* renderer = nullptr;
     };
 }

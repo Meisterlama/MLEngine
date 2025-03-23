@@ -2,8 +2,8 @@
 // Created by lama on 22/03/25.
 //
 #pragma once
-#include <memory>
 #include <cassert>
+#include <memory>
 
 #include "ModuleInterface.h"
 #include "CoreInterfaces/Types.h"
