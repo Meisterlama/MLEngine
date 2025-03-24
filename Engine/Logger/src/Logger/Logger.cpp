@@ -54,10 +54,22 @@ namespace MLEngine::Internal
 
 void MLEngine::StdOutLogCallback(const LogEvent* ev)
 {
-    fmt::print(fmt::fg(Internal::GetLogLevelColor(ev->level)), "[{}][{}]:{}\n", Internal::GetLogLevelString(ev->level), ev->time, ev->message);
+#define PRINTFILELOCATION 1
+#if PRINTFILELOCATION
+    fmt::print("{}", ev->FileLocation);
+#endif
+
+    fmt::print(
+        fmt::fg(Internal::GetLogLevelColor(ev->level)),
+        "[{}][{}]:{}\n",
+        Internal::GetLogLevelString(ev->level), ev->time, ev->message
+    );
 }
 
 std::string MLEngine::GetDefaultFormattedLogMessage(const LogEvent* ev)
 {
-    return fmt::format("[{}][{}]:{}\n", Internal::GetLogLevelString(ev->level), ev->time, ev->message);
+    return fmt::format(
+        "[{}][{}]:{}\n",
+        Internal::GetLogLevelString(ev->level), ev->time, ev->message
+    );
 }

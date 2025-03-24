@@ -12,11 +12,12 @@
 #include "Platform/EntryPoint.h"
 #include "Rendering/Camera.h"
 #include "Rendering/Context.h"
+#include "Rendering/Module.h"
 #include "Rendering/Shader.h"
 
-MLEngine::ApplicationInterface* MLEngine::CreateApplication()
+Handle<MLEngine::ApplicationInterface> MLEngine::CreateApplication()
 {
-    return new DefaultApp();
+    return MakeHandle<DefaultApp>();
 }
 
 static unsigned int VAO, VBO;
@@ -118,7 +119,7 @@ void DefaultApp::Update()
     default_shader->SetUniform("lightColor", glm::vec3(1.0f, 0.0f, 1.0f));
     default_shader->SetUniform("objectColor", glm::vec3(1.0f, 1.0f, 1.0f));
 
-    auto renderer = MLEngine::s_engine->default_gcontext->GetRenderer();
+    auto renderer = MLEngine::ModuleLocator<MLEngine::RenderingModule>::Get()->GetGraphicsContext()->GetRenderer();
 
     renderer->DrawMesh(cube_mesh, default_shader.get(), &camera);
     translate = glm::translate(glm::mat4(1.0f), lightPos);

@@ -11,7 +11,7 @@
 
 namespace MLEngine
 {
-    inline void MLInitImGui(GraphicsContext* Context, const Window* Window)
+    inline void MLInitImGui(const Handle<GraphicsContext>& Context, const Handle<Window>& Window)
     {
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();

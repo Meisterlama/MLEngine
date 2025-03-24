@@ -12,8 +12,15 @@ namespace MLEngine
     public:
         ModuleInterface() = default;
         ModuleInterface(const ModuleInterface&) = delete;
-        virtual ~ModuleInterface() = default;
+        virtual ~ModuleInterface()
+        {
+            if (bInitialized)
+            {
+                ModuleInterface::Shutdown();
+            }
+        }
 
+        //TODO: Support initialization arguments
         virtual void Init()
         {
             bInitialized = true;

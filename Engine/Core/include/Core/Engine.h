@@ -11,20 +11,12 @@
 #include "CoreInterfaces/Types.h"
 #include "Platform/PlatformEvent.h"
 
+
 namespace MLEngine
 {
-    class GraphicsContext;
     class Window;
-    class Renderer;
-}
-
-namespace MLEngine
-{
     class ApplicationInterface;
-}
 
-namespace MLEngine
-{
     class Engine;
     extern Engine* s_engine;
 
@@ -37,7 +29,7 @@ namespace MLEngine
 
         void RegisterInputEventCallbacks();
 
-        void Init(ApplicationInterface* application);
+        void Init(Handle<ApplicationInterface> application);
 
         void Update();
 
@@ -49,23 +41,22 @@ namespace MLEngine
 
         void RequestShutdown(std::string reason = "Unknown")
         {
-            ShutdownReason = std::move(reason);
-            bShutdownRequested = true;
+            shutdownReason = std::move(reason);
+            shutdownRequested = true;
         };
 
         bool isPlaying = false;
 
     public:
-        Handle<Window> default_window = nullptr;
-        Handle<GraphicsContext> default_gcontext = nullptr;
+        Handle<Window> defaultWindow = nullptr;
         Console console;
 
-        ApplicationInterface* current_application = nullptr;
+        Handle<ApplicationInterface> currentApplication = nullptr;
 
-        uint64_t last_tick = 0;
-        bool freeze_time = false;
+        uint64_t lastTick = 0;
+        bool freezeTime = false;
 
-        bool bShutdownRequested = false;
-        std::string ShutdownReason{};
+        bool shutdownRequested = false;
+        std::string shutdownReason{};
     };
 }

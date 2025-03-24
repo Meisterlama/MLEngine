@@ -4,7 +4,9 @@
 #pragma once
 
 #include "CoreInterfaces/ApplicationInterface.h"
+#include "CoreInterfaces/Types.h"
+
 namespace MLEngine
 {
-    extern ApplicationInterface* CreateApplication();
+    extern Handle<ApplicationInterface> CreateApplication();
 }

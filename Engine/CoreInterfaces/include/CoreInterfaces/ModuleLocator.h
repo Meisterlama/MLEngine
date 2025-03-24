@@ -32,7 +32,7 @@ namespace MLEngine
 
         static constexpr Handle<T> Get()
         {
-            assert(instance); // "Module not registered"
+            assert(instance && instance->IsInitialized()); // "Module not registered"
             return instance;
         }
 

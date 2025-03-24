@@ -13,7 +13,7 @@ namespace MLEngine
     class LoggerModule : public ModuleInterface
     {
     public:
-        LoggerModule() : ModuleInterface(){};
+        LoggerModule() : ModuleInterface() {};
         ~LoggerModule() override = default;
 
         void SetLevel(const LogLevel new_level) { level = new_level; }
@@ -25,9 +25,10 @@ namespace MLEngine
 
         void RemoveCallback(LogFn callback);;
 
-        void ManualLog(const LogLevel&& level, const std::string&& message, const std::string&& file_name, const Int32&& line) const;
-    private:
+        void ManualLog(const LogLevel&& level, const std::string&& message, const std::string&& file_name,
+                       const Int32&& line) const;
 
+    private:
         std::vector<LogFn> logCallbacks{};
         std::vector<Handle<std::ofstream>> openedFiles{};
         bool quiet = false;

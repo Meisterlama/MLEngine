@@ -56,7 +56,7 @@ namespace MLEngine
         LogEvent event;
         event.level = level;
         event.message = message;
-        event.FileLocation = fmt::format("[FILE:{}:{}]", file_name, line);
+        event.FileLocation = fmt::format("[{}:{}]", file_name, line);
         event.time = SDL_GetTicks();
 
         for (const auto& logCallback : logCallbacks)

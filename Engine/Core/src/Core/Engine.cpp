@@ -16,6 +16,7 @@
 #include "Logger/Module.h"
 #include "Platform/Module.h"
 #include "Platform/Window.h"
+#include "Rendering/Module.h"
 
 
 namespace MLEngine
@@ -54,14 +55,15 @@ namespace MLEngine
     {
     };
 
-    void Engine::Init(ApplicationInterface* application)
+    void Engine::Init(Handle<ApplicationInterface> application)
     {
         s_engine = this;
 
         ModuleLocator<PlatformModule>::RegisterInit();
         ModuleLocator<InputModule>::RegisterInit();
+        Handle<RenderingModule> renderingModule = ModuleLocator<RenderingModule>::RegisterInit();
 
-        Handle<LoggerModule> loggerModule = ModuleLocator<LoggerModule>::Register();
+        Handle<LoggerModule> loggerModule = ModuleLocator<LoggerModule>::RegisterInit();
         loggerModule->AddCallback(StdOutLogCallback);
         loggerModule->AddFile("log.txt");
 
@@ -69,36 +71,36 @@ namespace MLEngine
         MLLogTrace("Initializing Engine");
         RegisterInputEventCallbacks();
         console.RegisterCommand("shutdown", "Shuts down the engine", [this]() { RequestShutdown("Shutdown command"); });
-        console.RegisterCommand("toggleTime", "Toggle the time system", [this]() { freeze_time = !freeze_time; });
+        console.RegisterCommand("toggleTime", "Toggle the time system", [this]() { freezeTime = !freezeTime; });
         loggerModule->AddCallback([&](const LogEvent* event)
         {
             console.Log(GetDefaultFormattedLogMessage(event));
         });
 
 
-        default_window = MakeHandle<Window>();
-        default_window->Open("MLEngine");
-        default_gcontext = MakeHandle<GraphicsContext>(default_window);
+        defaultWindow = MakeHandle<Window>();
+        defaultWindow->Open("MLEngine");
+        renderingModule->InitGraphicsContext(defaultWindow);
 
-        MLInitImGui(default_gcontext.get(), default_window.get());
+        MLInitImGui(renderingModule->GetGraphicsContext(), defaultWindow);
 
-        current_application = application;
-        current_application->Init();
+        currentApplication = application;
+        currentApplication->Init();
     }
 
     void Engine::Update()
     {
-        if (!freeze_time) { UpdateTime(); }
-
-        Renderer* renderer = default_gcontext->GetRenderer();
+        if (!freezeTime) { UpdateTime(); }
+        Handle<GraphicsContext> graphicsContext = ModuleLocator<RenderingModule>::Get()->GetGraphicsContext();
+        Renderer* renderer = graphicsContext->GetRenderer();
         renderer->ClearScreen(0.1, 0.1, 0.1, 1.0);
 
         MLNewImGuiFrame();
 
-        current_application->Update();
+        currentApplication->Update();
         console.RenderConsole();
         MLRenderImGui();
-        default_gcontext->SwapBuffers();
+        graphicsContext->SwapBuffers();
         ModuleLocator<InputModule>::Get()->ResetRelativeMouseMotion();
     }
 
@@ -106,21 +108,21 @@ namespace MLEngine
     {
         ModuleLocator<InputModule>::Get()->ProcessEvent(event);
         MLProcessInputImGui(event);
-        default_window->ProcessEvent(event);
-        current_application->ProcessEvent(event);
+        defaultWindow->ProcessEvent(event);
+        currentApplication->ProcessEvent(event);
     }
 
     void Engine::Shutdown()
     {
-        MLLogTrace("Shutting down Engine with reason : {}", ShutdownReason);
-        current_application->Shutdown();
+        MLLogTrace("Shutting down Engine with reason : {}", shutdownReason);
+        currentApplication->Shutdown();
         MLShutdownImGui();
     }
 
     bool Engine::ShouldQuit()
     {
-        if (bShutdownRequested) return true;
-        if (default_window == nullptr) return true;
+        if (shutdownRequested) return true;
+        if (defaultWindow == nullptr) return true;
         return false;
     }
 }
