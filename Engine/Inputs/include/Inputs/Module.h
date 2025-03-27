@@ -15,7 +15,7 @@ namespace MLEngine
     class InputModule : public ModuleInterface
     {
     public:
-        InputModule() : ModuleInterface()
+        InputModule() : ModuleInterface("Input")
         {
         };
         ~InputModule() override = default;

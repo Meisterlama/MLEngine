@@ -5,7 +5,7 @@
 
 #include <SDL3/SDL_events.h>
 
-#include "Logger/Module.h"
+#include "Debug/Logger.h"
 
 namespace MLEngine
 {

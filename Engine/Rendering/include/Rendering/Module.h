@@ -10,7 +10,7 @@ namespace MLEngine
     class RenderingModule : public ModuleInterface
     {
     public:
-        RenderingModule() : ModuleInterface() {};
+        RenderingModule() : ModuleInterface("Rendering") {};
         ~RenderingModule() override = default;
 
         void Init() override;

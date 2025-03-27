@@ -15,7 +15,7 @@
 #include "Rendering/Module.h"
 #include "Rendering/Shader.h"
 
-Handle<MLEngine::ApplicationInterface> MLEngine::CreateApplication()
+MLEngine::Handle<MLEngine::ApplicationInterface> MLEngine::CreateApplication()
 {
     return MakeHandle<DefaultApp>();
 }

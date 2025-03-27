@@ -7,7 +7,7 @@
 
 #include <SDL3/SDL_log.h>
 
-#include "Logger/Module.h"
+#include "Debug/Logger.h"
 
 
 bool MLEngine::ResourceManager::RegisterResourceType(const std::string& typeName,

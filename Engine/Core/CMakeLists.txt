@@ -5,7 +5,6 @@ target_link_libraries(MLEngine_Core PUBLIC
                       MLEngine_HeaderOnlyLibs
                       MLEngine_Rendering
                       MLEngine_Inputs
-                      MLEngine_Logger
                       MLEngine_Resource
                       MLEngine_Platform
                       imgui

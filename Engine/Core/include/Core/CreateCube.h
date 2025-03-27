@@ -5,7 +5,7 @@
 #pragma once
 #include <tiny_obj_loader.h>
 
-#include "Logger/Module.h"
+#include "Debug/Logger.h"
 #include "Rendering/Mesh.h"
 
 namespace MLEngine

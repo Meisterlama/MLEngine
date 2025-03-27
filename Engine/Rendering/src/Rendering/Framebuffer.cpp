@@ -6,7 +6,7 @@
 #include <iostream>
 #include <glad/glad.h>
 
-#include "Logger/Module.h"
+#include "Debug/Logger.h"
 
 namespace MLEngine {
     Framebuffer::Framebuffer(unsigned int width, unsigned int height) { Initialize(width, height); }

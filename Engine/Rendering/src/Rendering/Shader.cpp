@@ -3,7 +3,7 @@
 //
 
 #include "Rendering/Shader.h"
-#include "Logger/Module.h"
+#include "Debug/Logger.h"
 
 #include <fstream>
 #include <iostream>

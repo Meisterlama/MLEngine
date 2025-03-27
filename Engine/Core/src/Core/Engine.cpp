@@ -12,8 +12,11 @@
 #include "Core/Time.h"
 #include "CoreInterfaces/ApplicationInterface.h"
 #include "CoreInterfaces/ModuleLocator.h"
+#include "Debug/Logger.h"
+#include "Debug/LogHandlers/CallbackLogHandler.h"
+#include "Debug/LogHandlers/ConsoleLogHandler.h"
+#include "Debug/LogHandlers/FileLogHandler.h"
 #include "Inputs/Module.h"
-#include "Logger/Module.h"
 #include "Platform/Module.h"
 #include "Platform/Window.h"
 #include "Rendering/Module.h"
@@ -57,25 +60,25 @@ namespace MLEngine
 
     void Engine::Init(Handle<ApplicationInterface> application)
     {
+        Logger::AddHandler(MakeHandle<ConsoleLogHandler>());
+        Logger::AddHandler(MakeHandle<FileLogHandler>("log.txt"));
+        MLLogInfo("Initializing Engine");
+
         s_engine = this;
 
         ModuleLocator<PlatformModule>::RegisterInit();
         ModuleLocator<InputModule>::RegisterInit();
         Handle<RenderingModule> renderingModule = ModuleLocator<RenderingModule>::RegisterInit();
 
-        Handle<LoggerModule> loggerModule = ModuleLocator<LoggerModule>::RegisterInit();
-        loggerModule->AddCallback(StdOutLogCallback);
-        loggerModule->AddFile("log.txt");
 
 
-        MLLogTrace("Initializing Engine");
         RegisterInputEventCallbacks();
         console.RegisterCommand("shutdown", "Shuts down the engine", [this]() { RequestShutdown("Shutdown command"); });
         console.RegisterCommand("toggleTime", "Toggle the time system", [this]() { freezeTime = !freezeTime; });
-        loggerModule->AddCallback([&](const LogEvent* event)
+        Logger::AddHandler(MakeHandle<CallbackLogHandler>([this](const LogEvent& event)
         {
-            console.Log(GetDefaultFormattedLogMessage(event));
-        });
+            console.Log(event.message);
+        }));
 
 
         defaultWindow = MakeHandle<Window>();
@@ -114,9 +117,13 @@ namespace MLEngine
 
     void Engine::Shutdown()
     {
-        MLLogTrace("Shutting down Engine with reason : {}", shutdownReason);
+        MLLogInfo("Shutting down Engine with reason : {}", shutdownReason);
         currentApplication->Shutdown();
         MLShutdownImGui();
+
+        ModuleLocator<RenderingModule>::Unregister();
+        ModuleLocator<InputModule>::Unregister();
+        ModuleLocator<PlatformModule>::Unregister();
     }
 
     bool Engine::ShouldQuit()

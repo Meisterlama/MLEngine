@@ -2,9 +2,6 @@
 // Created by lama on 22/03/25.
 //
 #pragma once
-#include <cassert>
-#include <memory>
-
 #include "ModuleInterface.h"
 #include "CoreInterfaces/Types.h"
 
@@ -19,7 +16,7 @@ namespace MLEngine
     public:
         static constexpr Handle<T> Register()
         {
-            assert(!instance); // "Module already registered"
+            ML_ASSERT(!IsInitialized(), "Module already registered");
             instance = MakeHandle<T>();
             return instance;
         }
@@ -30,13 +27,30 @@ namespace MLEngine
             return instance;
         }
 
+        static constexpr void Unregister()
+        {
+            if (IsInitialized())
+            {
+                instance->Shutdown();
+            }
+            instance = nullptr;
+        }
+
         static constexpr Handle<T> Get()
         {
-            assert(instance && instance->IsInitialized()); // "Module not registered"
+            ML_ASSERT(IsInitialized(), "Module not registered");
             return instance;
         }
 
+        static constexpr bool IsInitialized()
+        {
+            return instance && instance->IsInitialized();
+        }
+
     private:
+        // TODO: Refactor to better manage lifetime
+        // When a Module isn't properly cleaned up at the end of Engine lifetime,
+        // it may be destructed at random time causing UB (currently segfault because logger is destroyed before)
         static Handle<T> instance;
     };
 

@@ -4,13 +4,11 @@
 #include "Rendering/Renderer.h"
 #include <glad/glad.h> // Ensure OpenGL functions are loaded
 
-#include "Logger/Module.h"
+#include "Debug/Logger.h"
 
 namespace MLEngine
 {
     Renderer::Renderer() { ConfigureGlobalStates(); }
-
-    Renderer::~Renderer() { MLLogTrace("Renderer destroyed"); }
 
     void Renderer::ClearScreen(float r, float g, float b, float a)
     {

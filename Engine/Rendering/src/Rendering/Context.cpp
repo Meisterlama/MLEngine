@@ -8,7 +8,7 @@
 #include <glad/glad.h>
 #include <SDL3/SDL_opengl.h>
 
-#include "Logger/Module.h"
+#include "Debug/Logger.h"
 
 
 namespace MLEngine

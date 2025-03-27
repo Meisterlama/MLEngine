@@ -7,7 +7,7 @@
 namespace MLEngine {
     class PlatformModule : public ModuleInterface {
         public:
-            PlatformModule() : ModuleInterface(){};
+            PlatformModule() : ModuleInterface("Platform"){};
             ~PlatformModule() override = default;
             void Init() override;
             void Update() override;

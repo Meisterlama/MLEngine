@@ -12,7 +12,7 @@ namespace MLEngine {
     public:
         Renderer();
 
-        ~Renderer();
+        ~Renderer() = default;
 
         void ClearScreen(float r, float g, float b, float a = 1.0f);
 

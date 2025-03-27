@@ -4,7 +4,7 @@
 
 #include "Rendering/Texture.h"
 
-#include "Logger/Module.h"
+#include "Debug/Logger.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
